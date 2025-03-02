@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bread vs. Banana War</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f5e1a4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .vote-button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .bread { background-color: #f4a261; color: white; }
+        .banana { background-color: #f4d35e; color: black; }
+        .vote-button:hover { opacity: 0.8; }
+    </style>
+</head>
+<body onload="displayVoteCounts()">
+    <h1>🍞 BREAD vs. 🍌 BANANA WAR!</h1>
+    <p>Pick your side wisely. This war has been going on for centuries. Which team are you on?</p>
+    
+    <button class="vote-button bread" onclick="vote('bread')">🥖 Team Bread</button>
+    <button class="vote-button banana" onclick="vote('banana')">🍌 Team Banana</button>
+    
+    <h2 id="bananaVotes">Loading...</h2>
+    <h2 id="breadVotes">Loading...</h2>
+    
+    <script>
+        function vote(team) {
+            if (localStorage.getItem("hasVoted")) {
+                alert("You have already voted! No switching sides.");
+                return;
+            }
+
+            let votes = localStorage.getItem(team + 'Votes');
+            votes = votes ? parseInt(votes) + 1 : 1;
+            localStorage.setItem(team + 'Votes', votes);
+            localStorage.setItem("hasVoted", "true"); // Lock their vote
+
+            window.location.href = "team-" + team + ".html";
+        }
+
+        function displayVoteCounts() {
+            document.getElementById('bananaVotes').innerText = `Team Banana: ${localStorage.getItem('bananaVotes') || 0} votes`;
+            document.getElementById('breadVotes').innerText = `Team Bread: ${localStorage.getItem('breadVotes') || 0} votes`;
+
+            // Disable voting buttons if already voted
+            if (localStorage.getItem("hasVoted")) {
+                document.querySelectorAll(".vote-button").forEach(button => {
+                    button.disabled = true;
+                    button.style.opacity = "0.5";
+                    button.innerText = "Vote Locked";
+                });
+            }
+        }
+    </script>
+</body>
+</html>
